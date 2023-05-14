@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { FaGoogle, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import { AuthContext } from '../../providers/AuthProvider';
 
@@ -8,6 +8,12 @@ const Login = () => {
     const { signIn } = useContext(AuthContext);
 
     const [show, setShow] = useState(false);
+
+    const location = useLocation();
+
+    const navigate = useNavigate();
+
+    const from = location?.state || '/';
 
     const handleLogin = event => {
         event.preventDefault();
@@ -20,6 +26,7 @@ const Login = () => {
             .then(result => {
                 const user = result.user;
                 console.log(user);
+                navigate(from, { replace: true });
             })
             .catch(error => console.log(error));
     }
@@ -84,7 +91,9 @@ const Login = () => {
                                 <FaGoogle color='#4285F4'></FaGoogle></button>
 
                         </div>
-                        <p className='text-center'><small>Don&apos;t have an account? <span className='text-error font-semibold underline'><Link to='/register'>Register</Link></span> </small></p>
+                        <p className='text-center'><small>Don&apos;t have an account? <span className='text-error font-semibold underline'>
+                            <Link to='/register' state={from}>Register</Link>
+                        </span></small></p>
                     </div>
                 </div>
             </div>

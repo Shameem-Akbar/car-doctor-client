@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import img from '../../assets/images/login/login.svg'
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaGoogle, FaFacebookF, FaLinkedinIn } from 'react-icons/fa';
 import { AuthContext } from '../../providers/AuthProvider';
 import { updateProfile } from 'firebase/auth';
@@ -11,6 +11,11 @@ const Register = () => {
     const [success, setSuccess] = useState(false);
     const [accepted, setAccepted] = useState(false);
     const { createUser } = useContext(AuthContext);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const from = location?.state || '/';
 
     const handleRegister = event => {
         event.preventDefault();
@@ -46,6 +51,7 @@ const Register = () => {
             confirmButtonText: 'Cool'
         })
         setSuccess(false);
+
     }
 
     const handleAccepted = event => {
@@ -56,7 +62,7 @@ const Register = () => {
         updateProfile(user, {
             displayName: name
         })
-            .then(() => { console.log('user name updated') })
+            .then(() => navigate(from, { replace: true }))
             .catch(error => {
                 setError(error.message);
             })
